@@ -4,7 +4,7 @@ import {
     RiGroupLine, RiGroupFill,
     RiShoppingBag3Line, RiShoppingBag3Fill,
     RiPagesLine, RiPagesFill
-} from "react-icons/ri"
+} from "react-icons/ri";
 import type { IconType } from "react-icons";
 
 interface NavItem {

@@ -1,11 +1,12 @@
-import { useEffect } from "react"
-import { Routes, Route } from "react-router-dom"
-import useAuthFetch from "./hooks/useAuthFetch"
-import ProtectedRoute from "./pages/ProtectedRoute"
-import Home from "./pages/Home"
-import Auth from "./pages/Auth"
-import NotFound from "./pages/NotFound"
-import BottomNavigation from "./components/BottomNavigation"
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import useAuthFetch from "./hooks/useAuthFetch";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
+import Auth from "./pages/Auth";
+import Customers from "./pages/Customers";
+import NotFound from "./pages/NotFound";
+import BottomNavigation from "./components/BottomNavigation";
 
 function App() {
   const { fetchUser } = useAuthFetch();
@@ -18,8 +19,9 @@ function App() {
     <>
       <Routes>
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/customers" element={<Customers />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

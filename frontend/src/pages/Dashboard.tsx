@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
 import { RiShoppingCartFill, RiGroupFill, RiShoppingBag3Fill, RiPagesFill } from "react-icons/ri";
 
-export default function Home() {
+export default function Dashboard() {
   const { user } = useAuthStore();
 
   const getGreeting = () => {
@@ -35,7 +35,7 @@ export default function Home() {
               <RiShoppingCartFill size={20} className="text-[#1cb5e0]" />
             </div>
             <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
-              Add<br />Product
+              Add<br />Products
             </p>
           </Link>
           <Link
@@ -46,7 +46,7 @@ export default function Home() {
               <RiGroupFill size={20} className="text-[#1cb5e0]" />
             </div>
             <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
-              Add<br />Customer
+              Add<br />Customers
             </p>
           </Link>
           <Link
@@ -57,7 +57,7 @@ export default function Home() {
               <RiShoppingBag3Fill size={20} className="text-[#1cb5e0]" />
             </div>
             <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
-              Create<br />Sale
+              Create<br />Sales
             </p>
           </Link>
           <Link
