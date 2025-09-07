@@ -56,6 +56,11 @@ export const sendOTP = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpCache.set(email, otp);
 
