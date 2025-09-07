@@ -1,0 +1,51 @@
+name: Deploy Business Management System
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Create production .env
+        working-directory: frontend
+        run: |
+          echo "VITE_SERVER_URL=${{ secrets.VPS_SERVER_URL }}" > .env
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Install sshpass & rsync
+        run: sudo apt-get update && sudo apt-get install -y sshpass rsync
+
+      - name: Deploy to VPS
+        run: |
+          # Ensure directories exist on VPS
+          sshpass -p "${{ secrets.VPS_PASS }}" ssh -o StrictHostKeyChecking=no \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "mkdir -p /root/web/BMS/frontend /root/web/BMS/backend"
+
+          # Deploy frontend dist -> /root/web/BMS/frontend (replace completely)
+          rsync -avz --delete \
+            -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
+            frontend/dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/frontend/
+
+          # Deploy backend folder -> /root/web/BMS/backend (replace completely)
+          rsync -avz --delete \
+            -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
+            backend/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/backend/
