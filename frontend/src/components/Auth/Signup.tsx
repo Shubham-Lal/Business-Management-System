@@ -92,7 +92,7 @@ const Signup = ({ setTab }: AuthProps) => {
 
     return (
         <div className="min-h-[100svh] grid place-items-center">
-            <div className="sm:max-w-lg w-full h-fit mx-auto p-2">
+            <div className="sm:max-w-lg w-full h-fit mx-auto p-4">
                 <div className="p-6 bg-white rounded-xl shadow-md">
                     <div className="mt-3 mb-6 flex flex-col items-center justify-center text-lg font-semibold">
                         <img src="logo.png" alt="" className="size-10" />

@@ -22,7 +22,7 @@ export default function DeleteCustomer({ toggleModal, selected }: DeleteCustomer
         >
             <form
                 onSubmit={handleDelete}
-                className="relative bg-white rounded-xl shadow-lg w-[calc(100%-16px)] sm:max-w-lg max-h-[100svh] overflow-y-auto"
+                className="relative bg-white rounded-xl shadow-lg w-[calc(100%-32px)] sm:max-w-lg max-h-[100svh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="px-6 pt-6 text-lg font-semibold text-gray-800 mb-4">

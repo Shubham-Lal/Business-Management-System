@@ -82,7 +82,7 @@ const CustomerForm: React.FC<CustomerFormModalProps> = ({ toggleModal, mode, ini
         >
             <form
                 onSubmit={handleSubmit}
-                className="relative bg-white rounded-xl shadow-lg w-[calc(100%-16px)] sm:max-w-lg max-h-[100svh] overflow-y-auto"
+                className="relative bg-white rounded-xl shadow-lg w-[calc(100%-32px)] sm:max-w-lg max-h-[100svh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="px-6 pt-6 text-lg font-semibold text-gray-800 mb-4">
@@ -90,7 +90,6 @@ const CustomerForm: React.FC<CustomerFormModalProps> = ({ toggleModal, mode, ini
                 </h2>
 
                 <div className="mb-4 px-6 space-y-4">
-                    {/* Inputs (unchanged) */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Name
