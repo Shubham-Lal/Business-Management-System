@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import useAuthStore from "../store/authStore";
-import { RiGroupFill, RiPagesFill, RiShoppingBag3Fill, RiShoppingCartFill } from "react-icons/ri";
+import { RiShoppingCartFill, RiGroupFill, RiShoppingBag3Fill, RiPagesFill } from "react-icons/ri";
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <div className="flex items-center justify-between bg-gradient-to-r from-[#000046] to-[#1cb5e0] text-white p-4 sm:p-6 shadow-md">
         <div>
-          <h1 className="text-xl md:text-2xl font-semibold">
+          <h1 className="text-xl md:text-2xl font-semibold line-clamp-1">
             {getGreeting()}, {user?.name.split(" ")[0] ?? "Guest"} 👋
           </h1>
           <p className="text-sm md:text-base font-[500] opacity-90">Welcome back to your dashboard</p>
@@ -34,7 +34,7 @@ export default function Home() {
             <div className="size-full flex items-center justify-center flex-grow bg-white">
               <RiShoppingCartFill size={20} className="text-[#1cb5e0]" />
             </div>
-            <p className="w-full px-2 pt-1 pb-1.5 text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
+            <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
               Add<br />Product
             </p>
           </Link>
@@ -45,7 +45,7 @@ export default function Home() {
             <div className="size-full flex items-center justify-center flex-grow bg-white">
               <RiGroupFill size={20} className="text-[#1cb5e0]" />
             </div>
-            <p className="w-full px-2 pt-1 pb-1.5 text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
+            <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
               Add<br />Customer
             </p>
           </Link>
@@ -56,7 +56,7 @@ export default function Home() {
             <div className="size-full flex items-center justify-center flex-grow bg-white">
               <RiShoppingBag3Fill size={20} className="text-[#1cb5e0]" />
             </div>
-            <p className="w-full px-2 pt-1 pb-1.5 text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
+            <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
               Create<br />Sale
             </p>
           </Link>
@@ -67,7 +67,7 @@ export default function Home() {
             <div className="size-full flex items-center justify-center flex-grow bg-white">
               <RiPagesFill size={20} className="text-[#1cb5e0]" />
             </div>
-            <p className="w-full px-2 pt-1 pb-1.5 text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
+            <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
               View<br />Reports
             </p>
           </Link>
