@@ -1,9 +1,18 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { toast } from "sonner";
-import useAddCustomer from "../hooks/customer/useAddCustomer";
+import useAddCustomer from "../../hooks/customer/useAddCustomer";
+import useUpdateCustomer from "../../hooks/customer/useUpdateCustomer";
 
-interface AddCustomerProps {
+interface CustomerFormModalProps {
     toggleModal: (state?: boolean) => void;
+    mode: "add" | "update";
+    initialData?: {
+        _id: string;
+        name: string;
+        phone: string;
+        email: string;
+        address?: string;
+    };
 }
 
 const isEmailValid = (email: string): boolean => {
@@ -18,22 +27,21 @@ const isIndianPhoneValid = (phone: string): boolean => {
 
 const normalizePhone = (phone: string): string => {
     let cleaned = phone.replace(/\D/g, "");
-
     if (cleaned.startsWith("91") && cleaned.length > 10) {
         cleaned = cleaned.slice(cleaned.length - 10);
     }
-
     return cleaned;
 };
 
-const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
+const CustomerForm: React.FC<CustomerFormModalProps> = ({ toggleModal, mode, initialData }) => {
     const { isAdding, addCustomer } = useAddCustomer();
+    const { isUpdating, updateCustomer } = useUpdateCustomer();
 
     const [formData, setFormData] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: ""
+        name: (mode === "update" && initialData) ? initialData.name : "",
+        phone: (mode === "update" && initialData) ? initialData.phone : "",
+        email: (mode === "update" && initialData) ? initialData.email : "",
+        address: (mode === "update" && initialData) ? initialData.address : ""
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,29 +52,26 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
         }));
     };
 
-    const handleAddCustomer = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const { name, email, address } = formData;
         const phone = normalizePhone(formData.phone);
 
-        if (!name) {
-            return toast.error("Name is required");
+        if (!name) return toast.error("Name is required");
+        if (!phone) return toast.error("Phone is required");
+        if (!isIndianPhoneValid(phone)) return toast.error("Please enter a valid Indian phone number");
+        if (!email) return toast.error("Email is required");
+        if (!isEmailValid(email)) return toast.error("Please enter a valid email address");
+
+        let ok = false;
+        if (mode === "add") {
+            ok = await addCustomer(name, phone, email, address);
         }
-        if (!phone) {
-            return toast.error("Phone is required");
-        }
-        if (!isIndianPhoneValid(phone)) {
-            return toast.error("Please enter a valid Indian phone number");
-        }
-        if (!email) {
-            return toast.error("Email is required");
-        }
-        if (!isEmailValid(email)) {
-            return toast.error("Please enter a valid email address");
+        else if (mode === "update" && initialData?._id) {
+            ok = await updateCustomer(initialData._id, name, phone, email, address);
         }
 
-        const ok = await addCustomer(name, phone, email, address);
         if (ok) toggleModal(false);
     };
 
@@ -76,15 +81,16 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
             onClick={() => toggleModal(false)}
         >
             <form
-                onSubmit={handleAddCustomer}
+                onSubmit={handleSubmit}
                 className="relative bg-white rounded-xl shadow-lg w-[calc(100%-16px)] sm:max-w-lg max-h-[100svh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="px-6 pt-6 text-lg font-semibold text-gray-800 mb-4">
-                    Customer Details
+                    {mode === "add" ? "Add Customer" : "Update Customer"}
                 </h2>
 
                 <div className="mb-4 px-6 space-y-4">
+                    {/* Inputs (unchanged) */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Name
@@ -94,10 +100,9 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md disabled:text-gray-500 outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Phone
@@ -107,10 +112,9 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md disabled:text-gray-500 outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Email
@@ -120,10 +124,9 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md disabled:text-gray-500 outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Address
@@ -133,7 +136,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                             value={formData.address}
                             onChange={handleChange}
                             rows={3}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md disabled:text-gray-500 outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
                 </div>
@@ -142,25 +145,29 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                     <button
                         type="button"
                         onClick={() => toggleModal(false)}
-                        className="relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold bg-gray-200 hover:bg-gray-300 rounded-md transition duration-200 cursor-pointer"
+                        className="w-full py-2 px-4 font-semibold bg-gray-200 hover:bg-gray-300 rounded-md transition cursor-pointer"
                     >
                         Close
                     </button>
                     <button
                         type="submit"
-                        disabled={isAdding}
+                        disabled={mode === "add" ? isAdding : isUpdating}
                         className={`
-                            relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold text-white rounded-md transition duration-200 
-                            ${isAdding
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                            relative w-full flex items-center justify-center py-2 px-4 font-semibold text-white rounded-md transition 
+                            ${mode === "add"
+                                ? isAdding
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                : isUpdating
+                                    ? "bg-gray-300 cursor-not-allowed"
+                                    : "bg-green-600 hover:bg-green-700 cursor-pointer"
                             }
                         `}
                     >
-                        {isAdding && (
+                        {(mode === "add" && isAdding) || (mode === "update" && isUpdating) ? (
                             <div className="absolute right-2 size-4 border-2 border-white border-t-gray-800 rounded-full animate-spin" />
-                        )}
-                        Save
+                        ) : null}
+                        {mode === "add" ? "Save" : "Update"}
                     </button>
                 </div>
             </form>
@@ -168,4 +175,4 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
     )
 }
 
-export default AddCustomer
+export default CustomerForm;
