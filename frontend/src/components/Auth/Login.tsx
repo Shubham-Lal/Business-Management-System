@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { AuthProps } from "../../pages/Auth";
-import useLoginUser from "../../hooks/useLoginUser";
-import useAuthFetch from "../../hooks/useAuthFetch";
+import useLoginUser from "../../hooks/auth/useLoginUser";
+import useAuthFetch from "../../hooks/auth/useAuthFetch";
 import useAuthStore from "../../store/authStore";
 import PasswordInput from "../Input/Password";
 import EmailInput from "../Input/Email";
@@ -31,9 +31,7 @@ const Login = ({ setTab }: AuthProps) => {
         const { email, password } = formData;
 
         const ok = await loginUser(email, password);
-        if (ok) {
-            await fetchUser();
-        }
+        if (ok) await fetchUser();
     };
 
     return (

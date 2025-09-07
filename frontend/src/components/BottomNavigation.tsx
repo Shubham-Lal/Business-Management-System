@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { RiLogoutBoxRLine } from "react-icons/ri";
-import useLogoutUser from "../hooks/useLogoutUser";
+import useLogoutUser from "../hooks/auth/useLogoutUser";
 import { navigationData } from "../data/navigationData";
 
 const BottomNavigation = () => {

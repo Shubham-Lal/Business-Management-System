@@ -13,7 +13,8 @@ const generateToken = (_id: mongoose.Types.ObjectId) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  res.status(200).json({ user: req.user });
+  const { name, email } = req.user;
+  res.status(200).json({ user: { name, email } });
 };
 
 export const loginUser = async (req: Request, res: Response) => {

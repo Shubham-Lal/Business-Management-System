@@ -1,9 +1,9 @@
 import { useState, type ChangeEvent, type MouseEvent } from "react";
 import { toast } from "sonner";
 import type { AuthProps } from "../../pages/Auth";
-import useSendOtp from "../../hooks/useSendOTP";
-import useVerifyOtp from "../../hooks/useVerifyOTP";
-import useAuthFetch from "../../hooks/useAuthFetch";
+import useSendOtp from "../../hooks/auth/useSendOTP";
+import useVerifyOtp from "../../hooks/auth/useVerifyOTP";
+import useAuthFetch from "../../hooks/auth/useAuthFetch";
 import useAuthStore from "../../store/authStore";
 import PasswordInput from "../Input/Password";
 import EmailInput from "../Input/Email";
@@ -87,9 +87,7 @@ const Signup = ({ setTab }: AuthProps) => {
         }
 
         const ok = await verifyOtp(name, email, password, otp);
-        if (ok) {
-            await fetchUser();
-        }
+        if (ok) await fetchUser();
     };
 
     return (

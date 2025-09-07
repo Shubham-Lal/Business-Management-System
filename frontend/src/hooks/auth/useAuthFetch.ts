@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import axios from "axios";
-import useAuthStore from "../store/authStore";
+import useAuthStore from "../../store/authStore";
 
 export default function useAuthFetch() {
     const { setUser, clearUser, setAuthenticating, setAuthenticated } = useAuthStore();

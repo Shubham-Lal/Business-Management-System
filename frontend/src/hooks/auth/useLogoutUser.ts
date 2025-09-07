@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
-import useAuthStore from "../store/authStore";
+import useAuthStore from "../../store/authStore";
 
 export default function useLogoutUser() {
     const { clearUser } = useAuthStore();

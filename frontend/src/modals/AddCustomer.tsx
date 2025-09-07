@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { toast } from "sonner";
+import useAddCustomer from "../hooks/customer/useAddCustomer";
 
 interface AddCustomerProps {
     toggleModal: (state?: boolean) => void;
@@ -26,6 +27,8 @@ const normalizePhone = (phone: string): string => {
 };
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
+    const { isAdding, addCustomer } = useAddCustomer();
+
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -62,11 +65,9 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
         if (!isEmailValid(email)) {
             return toast.error("Please enter a valid email address");
         }
-        if (!address) {
-            return toast.error("Address is required");
-        }
 
-
+        const ok = await addCustomer(name, phone, email, address);
+        if (ok) toggleModal(false);
     };
 
     return (
@@ -147,8 +148,18 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ toggleModal }) => {
                     </button>
                     <button
                         type="submit"
-                        className="relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold text-white rounded-md transition duration-200 bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                        disabled={isAdding}
+                        className={`
+                            relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold text-white rounded-md transition duration-200 
+                            ${isAdding
+                                ? "bg-gray-300 cursor-not-allowed"
+                                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                            }
+                        `}
                     >
+                        {isAdding && (
+                            <div className="absolute right-2 size-4 border-2 border-white border-t-gray-800 rounded-full animate-spin" />
+                        )}
                         Save
                     </button>
                 </div>
