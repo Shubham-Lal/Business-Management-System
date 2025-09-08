@@ -7,7 +7,7 @@ export interface ProductDocument extends Document {
     description: string;
     price: number;
     stock: number;
-    category: "Electronics" | "Clothing" | "Books" | "Food" | "Furniture";
+    category: string;
     businessId: mongoose.Types.ObjectId | UserDocument;
 }
 
@@ -35,8 +35,7 @@ const ProductSchema: Schema<ProductDocument> = new Schema(
         },
         category: {
             type: String,
-            required: [true, "Category is required"],
-            enum: ["Electronics", "Clothing", "Books", "Food", "Furniture"],
+            required: [true, "Category is required"]
         },
         businessId: {
             type: Schema.Types.ObjectId,

@@ -8,12 +8,12 @@ export interface Customer {
     address?: string
 }
 
-interface AuthState {
+interface CustomerState {
     customers: Customer[]
     setCustomers: (customersData: Customer[] | []) => void
 }
 
-const useCustomerStore = create<AuthState>((set) => ({
+const useCustomerStore = create<CustomerState>((set) => ({
     customers: [],
     setCustomers: (customersData) => set({ customers: customersData })
 }));

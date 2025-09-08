@@ -2,17 +2,12 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { toast } from "sonner";
 import useAddCustomer from "../../hooks/customer/useAddCustomer";
 import useUpdateCustomer from "../../hooks/customer/useUpdateCustomer";
+import type { Customer } from "../../store/customerStore";
 
 interface CustomerFormModalProps {
     toggleModal: (state?: boolean) => void;
     mode: "add" | "update";
-    initialData?: {
-        _id: string;
-        name: string;
-        phone: string;
-        email: string;
-        address?: string;
-    };
+    initialData?: Customer;
 }
 
 const isEmailValid = (email: string): boolean => {

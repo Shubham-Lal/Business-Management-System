@@ -5,6 +5,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes"
 import customerRoutes from "./routes/customerRoutes"
+import productRoutes from "./routes/productRoutes"
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(cors({
 app.get("/", (req, res) => res.send("Server running..."));
 app.use("/api/auth", authRoutes);
 app.use("/api/customer", customerRoutes);
+app.use("/api/product", productRoutes);
 
 mongoose.connect(process.env.MONGO_DB_URL as string)
   .then(async () => {

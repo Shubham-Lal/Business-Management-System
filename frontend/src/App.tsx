@@ -4,6 +4,7 @@ import useAuthFetch from "./hooks/auth/useAuthFetch";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
+import Products from "./pages/Products";
 import Customers from "./pages/Customers";
 import NotFound from "./pages/NotFound";
 import BottomNavigation from "./components/BottomNavigation";
@@ -21,6 +22,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="*" element={<NotFound />} />
         </Route>
