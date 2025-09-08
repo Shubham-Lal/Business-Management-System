@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { toast } from "sonner";
 import { RiAddLine, RiSubtractLine } from "react-icons/ri";
+import useAddProduct from "../../hooks/product/useAddProduct";
 import type { Product } from "../../store/productStore";
 
 interface ProductFormProps {
@@ -10,6 +11,8 @@ interface ProductFormProps {
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialData }) => {
+    const { isAdding, addProduct } = useAddProduct();
+
     const [formData, setFormData] = useState({
         name: (mode === "update" && initialData) ? initialData.name : "",
         description: (mode === "update" && initialData) ? initialData.description : "",
@@ -46,7 +49,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialDat
 
         let ok = false;
         if (mode === "add") {
-
+            ok = await addProduct(name, Number(price), stock, category, description);
         }
         else if (mode === "update" && initialData?._id) {
 
@@ -79,18 +82,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialDat
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Description
-                        </label>
-                        <textarea
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            rows={3}
                             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
@@ -163,6 +154,18 @@ const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialDat
                             ))}
                         </datalist>
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Description
+                        </label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows={3}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
                 </div>
 
                 <div className="py-4 px-6 grid grid-cols-2 gap-3 bg-gray-50">
@@ -175,11 +178,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialDat
                     </button>
                     <button
                         type="submit"
-                        disabled={mode === "add" ? false : false}
+                        disabled={mode === "add" ? isAdding : false}
                         className={`
                             relative w-full flex items-center justify-center py-2 px-4 font-semibold text-white rounded-md transition 
                             ${mode === "add"
-                                ? false
+                                ? isAdding
                                     ? "bg-gray-300 cursor-not-allowed"
                                     : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
                                 : false
@@ -188,7 +191,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ toggleModal, mode, initialDat
                             }
                         `}
                     >
-                        {(mode === "add" && false) || (mode === "update" && false) ? (
+                        {(mode === "add" && isAdding) || (mode === "update" && false) ? (
                             <div className="absolute right-2 size-4 border-2 border-white border-t-gray-800 rounded-full animate-spin" />
                         ) : null}
                         {mode === "add" ? "Save" : "Update"}

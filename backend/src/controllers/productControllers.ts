@@ -1,6 +1,21 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/Product";
 
+export const getProducts = async (req: Request, res: Response) => {
+    try {
+        const businessId = req.user._id;
+
+        const products = await ProductModel.find({ businessId })
+            .select("-businessId -__v")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({ products });
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
 export const createProduct = async (req: Request, res: Response) => {
     try {
         const { name, description, price, stock, category } = req.body ?? {};
@@ -36,7 +51,7 @@ export const createProduct = async (req: Request, res: Response) => {
         await product.save();
 
         return res.status(201).json({
-            message: "Product created successfully",
+            message: "Product added",
             product: (({ businessId, ...rest }) => rest)(product.toObject())
         });
     } catch (error) {
