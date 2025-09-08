@@ -49,3 +49,7 @@ jobs:
           rsync -avz --delete \
             -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
             backend/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/backend/
+
+          # Restart pm2 process securely using secret
+          sshpass -p "${{ secrets.VPS_PASS }}" ssh -o StrictHostKeyChecking=no \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "pm2 restart ${{ secrets.PM2_APP }}"

@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type MouseEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import type { AuthProps } from "../../pages/Auth";
 import useSendOtp from "../../hooks/auth/useSendOTP";
@@ -46,9 +46,7 @@ const Signup = ({ setTab }: AuthProps) => {
         }));
     };
 
-    const handleSendOTP = async (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
+    const handleSendOTP = async () => {
         const { name, email, password } = formData;
 
         if (!name) {
@@ -66,9 +64,7 @@ const Signup = ({ setTab }: AuthProps) => {
         await sendOtp(email);
     };
 
-    const handleVerifyOTP = async (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
+    const handleVerifyOTP = async () => {
         const { name, email, password, otp } = formData;
 
         if (!name) {
@@ -90,6 +86,13 @@ const Signup = ({ setTab }: AuthProps) => {
         if (ok) await fetchUser();
     };
 
+    const handleSignupForm = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!isOTPSent) await handleSendOTP();
+        else await handleVerifyOTP();
+    }
+
     return (
         <div className="min-h-[100svh] grid place-items-center">
             <div className="sm:max-w-lg w-full h-fit mx-auto p-4">
@@ -99,7 +102,10 @@ const Signup = ({ setTab }: AuthProps) => {
                         Register your account
                     </div>
 
-                    <div className="space-y-4">
+                    <form
+                        onSubmit={handleSignupForm}
+                        className="space-y-4"
+                    >
                         <div>
                             <label className="block mb-1 font-medium text-gray-800">
                                 Name
@@ -150,8 +156,8 @@ const Signup = ({ setTab }: AuthProps) => {
 
                         {!isOTPSent ? (
                             <button
+                                type="submit"
                                 disabled={isOTPSending}
-                                onClick={handleSendOTP}
                                 className={`
                                 relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold text-white rounded-md transition duration-200 
                                 ${isOTPSending
@@ -167,8 +173,8 @@ const Signup = ({ setTab }: AuthProps) => {
                             </button>
                         ) : (
                             <button
+                                type="submit"
                                 disabled={isOTPVerifying || isAuthenticating}
-                                onClick={handleVerifyOTP}
                                 className={`
                                 relative w-full py-2 px-4 flex items-center justify-center gap-2 font-semibold text-white rounded-md transition duration-200 
                                 ${(isOTPVerifying || isAuthenticating)
@@ -195,7 +201,7 @@ const Signup = ({ setTab }: AuthProps) => {
                                 </button>
                             </p>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
