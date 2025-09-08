@@ -50,10 +50,10 @@ jobs:
             -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
             backend/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/backend/
 
-          # Install backend dependencies on VPS
+          # Install backend dependencies on VPS (auto-detect npm)
           sshpass -p "${{ secrets.VPS_PASS }}" ssh -o StrictHostKeyChecking=no \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd /root/web/BMS/backend && npm install --production"
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'NPM=$(command -v npm) && cd /root/web/BMS/backend && $NPM install --production'
 
-          # Restart pm2 process (auto-detect pm2 binary)
+          # Restart pm2 process (auto-detect pm2)
           sshpass -p "${{ secrets.VPS_PASS }}" ssh -o StrictHostKeyChecking=no \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} 'PM2=$(command -v pm2) && $PM2 restart ${{ secrets.PM2_APP }}'
