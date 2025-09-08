@@ -45,8 +45,8 @@ jobs:
             -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
             frontend/dist/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/frontend/
 
-          # Deploy backend folder -> /root/web/BMS/backend (but KEEP node_modules)
-          rsync -avz --delete --exclude node_modules \
+          # Deploy backend folder -> /root/web/BMS/backend (KEEP node_modules & .env)
+          rsync -avz --delete --exclude node_modules --exclude .env \
             -e "sshpass -p '${{ secrets.VPS_PASS }}' ssh -o StrictHostKeyChecking=no" \
             backend/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/root/web/BMS/backend/
 
