@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RiAddBoxLine, RiDeleteBin6Line, RiEditBoxLine } from "react-icons/ri";
+import { RiAddBoxLine, RiEditBoxLine, RiPhoneLine, RiDeleteBin6Line } from "react-icons/ri";
 import useGetCustomers from "../hooks/customer/useGetCustomers";
 import useCustomerStore from "../store/customerStore";
 import CustomerForm from "../components/Modal/CustomerForm";
@@ -90,6 +90,34 @@ export default function Customers() {
                                     Edit<br />Customer
                                 </p>
                             </button>
+                            {(() => {
+                                const firstSelected = filteredCustomers.find(c => c._id === selected[0]);
+                                return firstSelected?.phone ? (
+                                    <a
+                                        href={`tel:${firstSelected.phone}`}
+                                        className="flex flex-col items-center justify-center aspect-square border border-gray-200 hover:shadow-xs transition rounded-xl overflow-hidden cursor-pointer"
+                                    >
+                                        <div className="size-full flex items-center justify-center flex-grow bg-white">
+                                            <RiPhoneLine size={20} className="text-[#1cb5e0]" />
+                                        </div>
+                                        <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium bg-gray-50 text-gray-700 leading-[16px]">
+                                            Call<br />Customer
+                                        </p>
+                                    </a>
+                                ) : (
+                                    <button
+                                        disabled
+                                        className="flex flex-col items-center justify-center aspect-square border border-gray-200 bg-gray-100 cursor-not-allowed rounded-xl overflow-hidden"
+                                    >
+                                        <div className="size-full flex items-center justify-center flex-grow">
+                                            <RiPhoneLine size={20} className="text-gray-400" />
+                                        </div>
+                                        <p className="w-full px-2 pt-1 pb-1.5 text-sm sm:text-sm text-center font-medium text-gray-400 leading-[16px]">
+                                            No Phone
+                                        </p>
+                                    </button>
+                                );
+                            })()}
                             <button
                                 onClick={() => toggleDeleteModal(true)}
                                 className="flex flex-col items-center justify-center aspect-square border border-gray-200 hover:shadow-xs transition rounded-xl overflow-hidden cursor-pointer"
@@ -105,7 +133,7 @@ export default function Customers() {
                     )}
                 </div>
 
-                {(isLoading && customers.length === 0) ? (
+                {isLoading ? (
                     <div className="mx-auto size-4 border-2 border-white border-t-gray-800 rounded-full animate-spin" />
                 ) : (
                     <div className="rounded-xl overflow-hidden border border-gray-300 shadow-xs">
@@ -162,7 +190,11 @@ export default function Customers() {
                                     ) : (
                                         <tr className="text-gray-700 text-center bg-white">
                                             <td colSpan={4} className="py-4 text-center font-medium">
-                                                No customers added yet...
+                                                {customers.length === 0 ? (
+                                                    "No customers added yet..."
+                                                ) : filteredCustomers.length === 0 ? (
+                                                    "Customer not found"
+                                                ) : ""}
                                             </td>
                                         </tr>
                                     )}
